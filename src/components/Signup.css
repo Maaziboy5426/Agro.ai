@@ -1,0 +1,82 @@
+/* Container for the schedule input form */
+.schedule-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff; /* Solid white background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+}
+
+/* Header style */
+.schedule-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button styling */
+.schedule-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.schedule-container button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Styling for the generated schedule */
+.schedule-output {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa; /* Light gray background */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Highlighted text in the schedule */
+.schedule-output span {
+    font-weight: bold;
+    color: #007bff; /* Blue highlight */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .schedule-container {
+        padding: 15px;
+    }
+
+    .schedule-container button {
+        font-size: 16px;
+    }
+}

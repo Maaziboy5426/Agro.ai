@@ -1,0 +1,78 @@
+/* src/components/SlideInNavbar.css */
+
+.slide-in-navbar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Hide the navbar off-screen */
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: left 0.3s ease; /* Smooth transition */
+    z-index: 1000; /* Ensure it appears above other content */
+  }
+  
+  .slide-in-navbar.open {
+    left: 0; /* Slide in */
+  }
+  
+  .slide-in-navbar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .slide-in-navbar li {
+    padding: 15px;
+  }
+  
+  .slide-in-navbar a, .slide-in-navbar button {
+    color: whitesmoke;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 10%;
+    text-align: left; /* Align text to the left */
+  }
+  
+  .navbar-toggle {
+    background-color: none; /* Make the button background transparent */
+    border: none;
+    cursor: pointer;
+    width:249px;
+    position: fixed;
+    top: 15px; /* Adjusted top position */
+    left: 1px;
+    right: 10px; /* Adjusted left position */
+    z-index: 1001; /* Ensure it appears above the navbar */
+    padding: 5px; /* Add some padding for better click area */
+  }
+  
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 25px; /* Reduced width of the hamburger icon */
+    height: 25px; /* Reduced height of the hamburger icon */
+  }
+  
+  .hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px; /* Thickness of the lines */
+    background-color: white; /* Color of the lines */
+    transition: all 0.3s ease; /* Smooth transition for the lines */
+  }
+  
+  
+  .hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px); /* Rotate the first line */
+  }
+  
+  .hamburger.open span:nth-child(2) {
+    opacity: 0; /* Hide the middle line */
+  }
+  
+  .hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px); /* Rotate the third line */
+  }

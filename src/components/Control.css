@@ -1,0 +1,99 @@
+/* Container for the entire resource monitor */
+.water-level-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(145deg, #e0eafc, #f2f7ff);
+    border-radius: 10px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading style */
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  /* Subheading style for each progress bar */
+  h3 {
+    margin: 15px 0;
+    color: #555;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  /* Row that holds the progress bars */
+  .progress-bar-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px; /* Adjusted space between progress bars */
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  /* Wrapper for each progress bar */
+  .progress-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    text-align: center;
+  }
+  
+  /* Styling for the dispense button */
+  .dispense-button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #57abe3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Disabled button style */
+  .dispense-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  /* Button hover effect */
+  .dispense-button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+  
+  /* Adding responsiveness for smaller screens */
+  @media (max-width: 768px) {
+    .progress-bar-row {
+      gap: 20px;
+      flex-direction: column;
+    }
+    
+    .progress-bar-wrapper {
+      width: 100%;
+      padding: 15px;
+    }
+    
+    .dispense-button {
+      width: 100%;
+    }
+  }
+  
