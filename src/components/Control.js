@@ -3,6 +3,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "./Control.css";
 import { Link } from 'react-router-dom';
+import SlideInNavbar from "./SlideInNavbar";
 
 const WaterLevelProgress = () => {
   const [waterLevel, setWaterLevel] = useState(50); // Default water level
@@ -19,6 +20,7 @@ const WaterLevelProgress = () => {
 
   return (
     <div className="water-level-container">
+      <SlideInNavbar />
       <h2>Resource Monitor</h2>
       <div className="progress-bar-row">
         {/* Water Level Bar */}
@@ -70,8 +72,7 @@ const WaterLevelProgress = () => {
           />
         </div>
       </div>
-      <p><Link to='/home'>Return</Link></p>
-    </div>
+ </div>
   );
 };
 

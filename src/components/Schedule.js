@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './Schedule.css';
+import SlideInNavbar from './SlideInNavbar';
 
 const ScheduleGenerator = () => {
     const [startDate, setStartDate] = useState("");
@@ -38,6 +39,7 @@ const ScheduleGenerator = () => {
     return (
         <div style={{ maxWidth: "600px", margin: "20px auto", padding: "20px", backgroundColor: "rgba(255, 255, 255, 0.8)", borderRadius: "8px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",paddingRight:"40px" }}>
             <h2>Plant Watering Schedule Generator</h2>
+            <SlideInNavbar />
 
             <div>
                 <label>Start Date: </label>
@@ -85,9 +87,6 @@ const ScheduleGenerator = () => {
                     <p><strong>Timezone:</strong> {schedule.timezone}</p>
                 </div>
             )}
-                    <p className="return-link">
-                          <Link to="/home">Return</Link>
-                        </p>
         </div>
     );
 };

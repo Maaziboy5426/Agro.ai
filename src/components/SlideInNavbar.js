@@ -17,6 +17,7 @@ const SlideInNavbar = () => {
     console.log("User  logged out");
     navigate('/login'); // Redirect to the Login page
   };
+  
 
   return (
     <div>
@@ -32,9 +33,12 @@ const SlideInNavbar = () => {
           <li>
             <br />
             <br />
-            <br />
-            <Link to="/profile" onClick={toggleNavbar}>Profile</Link>
+
+            <Link to="/home" onClick={toggleNavbar}>Home</Link>
           </li>
+          <li>
+          <Link to="/profile" onClick={toggleNavbar}>Profil</Link>
+          </li> 
           <li>
           <Link to="/control" onClick={toggleNavbar}>Controls</Link>
           </li> 
@@ -42,7 +46,7 @@ const SlideInNavbar = () => {
             <Link to="/plantsearch" onClick={toggleNavbar}>Explore</Link>
           </li>
           <li>
-            <Link to='/chat' onClick={toggleNavbar}>Community Chat</Link>
+            <Link to='/chat' onClick={toggleNavbar}>Community</Link>
           </li>
           <li>
             <Link to='/chatbot' onClick={toggleNavbar}>Chat Bot</Link>

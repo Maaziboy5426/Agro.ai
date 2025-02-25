@@ -7,19 +7,10 @@ const Home = () => {
   return (
     <>
       <div className="home-container">
-        <header className="home-header">
-          <p>Your one-stop solution for all your gardening needs.</p>
-        </header>
+        <br></br>
+        <br></br>
+        <br></br>
 
-        <section className="features">
-          <h2>Features</h2>
-          <ul>
-            <li>Search for various plants and their requirements.</li>
-            <li>Get tips on plant care and maintenance.</li>
-            <li>Explore a gallery of beautiful plants.</li>
-            <li>Join our community of gardening enthusiasts.</li>
-          </ul>
-        </section>
 
         <section className="gallery">
           <h2>Gallery</h2>
@@ -30,6 +21,15 @@ const Home = () => {
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSamTOq-K28abyJeYAko7_UyRPWdqAnVmrgUA&s" alt="Plant 4" />
             <img src="https://tse4.mm.bing.net/th?id=OIP.qB_pXl1pR3DrnF_3JsDVuQHaE8&pid=Api&P=0&h=220" alt="Plant 5" />
           </div>
+        </section>
+        <section className="features">
+          <h2>Features</h2>
+          <ul>
+            <li>Search for various plants and their requirements.</li>
+            <li>Get tips on plant care and maintenance.</li>
+            <li>Explore a gallery of beautiful plants.</li>
+            <li>Join our community of gardening enthusiasts.</li>
+          </ul>
         </section>
 
         <section className="about">

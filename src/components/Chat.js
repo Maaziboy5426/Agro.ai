@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './Chat.css'; // Import CSS for styling
+import SlideInNavbar from './SlideInNavbar';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -36,6 +37,7 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
+      <SlideInNavbar />
       <h2>Community Chat</h2>
       <p>Logged in as: <strong>{username}</strong></p> {/* ✅ Show username, but not editable */}
       
@@ -64,7 +66,6 @@ const Chat = () => {
       </form>
 
       <button className="clear-button" onClick={handleClearChat}>Clear Chat</button>
-      <p><Link to='/home'>Return</Link></p>
     </div>
   );
 };

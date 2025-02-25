@@ -2,16 +2,28 @@
 
 .slide-in-navbar {
     position: fixed;
-    top: 0;
     left: -250px; /* Hide the navbar off-screen */
-    width: 250px;
-    height: 100%;
+    width: 150px;
+    height: 100vh; 
     background-color: #333;
     color: white;
     transition: left 0.3s ease; /* Smooth transition */
     z-index: 1000; /* Ensure it appears above other content */
   }
-  
+  .slide-in-navbar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Start fully hidden off-screen */
+    width: 150px; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: rgba(51, 51, 51,0.96); /* Slight transparency */
+    color: white;
+    transition: transform 0.3s ease; /* Smooth slide */
+    z-index: 1000; /* Above all other content */
+    justify-content: flex-start; /* Align items to the left */
+    padding-top: 60px; /* Space from top (for hamburger icon) */
+  }
+
   .slide-in-navbar.open {
     left: 0; /* Slide in */
   }
@@ -22,7 +34,7 @@
   }
   
   .slide-in-navbar li {
-    padding: 15px;
+    padding: 15px 20px;
   }
   
   .slide-in-navbar a, .slide-in-navbar button {
@@ -31,7 +43,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    width: 10%;
+    width: 100%;
     text-align: left; /* Align text to the left */
   }
   
@@ -39,13 +51,14 @@
     background-color: none; /* Make the button background transparent */
     border: none;
     cursor: pointer;
-    width:249px;
+    width:100%;
     position: fixed;
-    top: 15px; /* Adjusted top position */
+    
+    top: 0px;
     left: 1px;
     right: 10px; /* Adjusted left position */
     z-index: 1001; /* Ensure it appears above the navbar */
-    padding: 5px; /* Add some padding for better click area */
+/* Add some padding for better click area */
   }
   
   .hamburger {

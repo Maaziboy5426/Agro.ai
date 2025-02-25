@@ -12,14 +12,16 @@
     "react-navigation-stack": "^2.10.4",
     "react-router-dom": "^6.0.0",
     "react-scripts": "5.0.0",
-    "react-switch": "^7.1.0"
+    "react-slick": "^0.30.3",
+    "react-switch": "^7.1.0",
+    "slick-carousel": "^1.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-      "android": "npx react-native run-android"
+    "android": "npx react-native run-android"
   },
   "eslintConfig": {
     "extends": [

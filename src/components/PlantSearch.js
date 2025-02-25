@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './PlantSearch.css'; 
+import SlideInNavbar from './SlideInNavbar';
 
 const cropsData = [
   { name: 'Rice', requirements: 'Kharif crop, Urea, DAP, MOP, Compost, Vermicompost, Azospirillum', image: 'https://static.vecteezy.com/system/resources/thumbnails/050/753/498/small/photograph-of-green-rice-plants-against-a-blue-sky-background-photo.jpg' },
@@ -50,6 +51,7 @@ const PlantSearch = () => {
 
   return (
     <div className="plant-search-container">
+      <SlideInNavbar />
       <h3>Search for Plants</h3>
       <input
         type="text"
@@ -87,7 +89,6 @@ const PlantSearch = () => {
           <p>No fruits found.</p>
         )}
       </div>
-      <p><Link to="/home">Return</Link></p>
     </div>
   );
 };

@@ -1,99 +1,132 @@
 /* Container for the entire resource monitor */
 .water-level-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(145deg, #e0eafc, #f2f7ff);
-    border-radius: 10px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #e0eafc, #f2f7ff);
+  border-radius: 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  flex-direction: column; /* Stacking the elements */
+  align-items: center;
+  padding: 20px; /* Reduced padding for mobile */
+  width: 3  00px;
+  box-sizing: border-box;
+}
+
+/* Heading style */
+h2 {
+  margin-bottom: 10px; /* Less space */
+  color: #333;
+  font-size: 1.8rem; /* Slightly smaller font size */
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* Subheading style for each progress bar */
+h3 {
+  margin: 10px 0; /* Reduced margin */
+  color: #555;
+  text-align: center;
+  font-size: 1rem; /* Smaller subheading size */
+  font-weight: 500;
+}
+
+/* Row that holds the progress bars */
+.progress-bar-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Reduced gap between bars */
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%; /* Ensure progress bars are contained */
+}
+
+/* Wrapper for each progress bar */
+.progress-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px; /* Reduced padding */
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Smaller width for each progress bar */
+  text-align: center;
+}
+
+/* Styling for the dispense button */
+.dispense-button {
+  margin-top: 10px;
+  padding: 10px 20px; /* Smaller button padding */
+  font-size: 14px; /* Smaller font size */
+  font-weight: 500;
+  background-color: #57abe3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Full-width button */
+}
+
+/* Disabled button style */
+.dispense-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Button hover effect */
+.dispense-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Adding responsiveness for smaller screens */
+@media (max-width: 768px) {
+  .water-level-container {
+    padding: 10px; /* Further reduced padding */
   }
-  
-  /* Heading style */
-  h2 {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-  
-  /* Subheading style for each progress bar */
-  h3 {
-    margin: 15px 0;
-    color: #555;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 500;
-  }
-  
-  /* Row that holds the progress bars */
+
   .progress-bar-row {
-    display: flex;
+    gap: 10px; /* Even smaller gap */
+    flex-direction: column; /* Stack vertically */
     justify-content: center;
-    gap: 40px; /* Adjusted space between progress bars */
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-  
-  /* Wrapper for each progress bar */
-  .progress-bar-wrapper {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    text-align: center;
   }
-  
-  /* Styling for the dispense button */
+
+  .progress-bar-wrapper {
+    width: 120px; /* Even smaller width for progress bars */
+    padding: 10px; /* Reduced padding */
+  }
+
   .dispense-button {
-    margin-top: 15px;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #57abe3;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 8px 16px; /* Smaller padding for button */
+    font-size: 12px; /* Smaller text for mobile */
+  }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.5rem; /* Even smaller heading */
   }
   
-  /* Disabled button style */
-  .dispense-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
+  h3 {
+    font-size: 0.9rem; /* Smaller subheading */
   }
   
-  /* Button hover effect */
-  .dispense-button:hover:not(:disabled) {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+  .progress-bar-wrapper {
+    width: 100px; /* Even smaller width for mobile */
+    padding: 8px; /* Less padding */
   }
-  
-  /* Adding responsiveness for smaller screens */
-  @media (max-width: 768px) {
-    .progress-bar-row {
-      gap: 20px;
-      flex-direction: column;
-    }
-    
-    .progress-bar-wrapper {
-      width: 100%;
-      padding: 15px;
-    }
-    
-    .dispense-button {
-      width: 100%;
-    }
+
+  .dispense-button {
+    padding: 6px 12px; /* Reduced padding */
+    font-size: 12px; /* Smaller font size */
   }
-  
+}

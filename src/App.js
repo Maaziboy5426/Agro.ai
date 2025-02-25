@@ -1,5 +1,6 @@
 // src/App.js
-
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../src/components/Home';
@@ -12,7 +13,8 @@ import Data from '../src/components/Data';
 import Chat from './components/Chat';
 import Control from './components/Control'; // Import the Control component
 import Chatbot from './components/Chatbot';
-import Schedule from './components/Schedule'
+import Schedule from './components/Schedule';
+
 
 function App() {
   const [users, setUsers] = useState([]); // State to store registered users
