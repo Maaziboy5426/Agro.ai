@@ -44,19 +44,6 @@ const WaterLevelProgress = () => {
           </button>
         </div>
 
-        {/* Fertilizer Level Bar */}
-        <div className="progress-bar-wrapper">
-          <h3>Fertilizer Level</h3>
-          <CircularProgressbar
-            value={fertilizerLevel}
-            text={`${fertilizerLevel}%`}
-            styles={buildStyles({
-              pathColor: "#8a6c0b", // Blue color for fertilizer level
-              textColor: "#000",
-              trailColor: "#ddd",
-            })}
-          />
-        </div>
 
         {/* Moisture Level Bar */}
         <div className="progress-bar-wrapper">
