@@ -49,7 +49,7 @@ const Profile = () => {
         <div className="profile-card">
           <img
             src={user.profilePicture}
-            alt="Profile"
+            alt="pfp.jpg"
             className="profile-picture clickable"
             onClick={handleImageClick}
             title="Click to change profile picture"
