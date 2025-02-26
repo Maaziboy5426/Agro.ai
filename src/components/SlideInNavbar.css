@@ -1,5 +1,12 @@
 /* src/components/SlideInNavbar.css */
 
+.navbar-name {
+  margin-left: 10px; /* Space between the hamburger and the name */
+  font-size: 18px;
+  color: #ffff; /* Adjust text color as needed */
+  align-content: center;
+}
+
 .slide-in-navbar {
     position: fixed;
     left: -250px; /* Hide the navbar off-screen */
@@ -53,8 +60,13 @@
     cursor: pointer;
     width:100%;
     position: fixed;
-    
+    display: flex;
+    align-items: center;
+    padding: 10px;
     top: 0px;
+    font-family: 'Times New Roman';
+    font-size: 30px;
+    text-align: center;
     left: 1px;
     right: 10px; /* Adjusted left position */
     z-index: 1001; /* Ensure it appears above the navbar */
