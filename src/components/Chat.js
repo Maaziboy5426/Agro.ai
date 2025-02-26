@@ -14,10 +14,8 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const username = localStorage.getItem('userName') || 'Anonymous';
 
-  // Polling interval in milliseconds (e.g., 5 seconds)
   const pollingInterval = 5000;
 
-  // Fetch messages from the new database and collection
   const fetchMessages = async () => {
     try {
       const response = await databases.listDocuments(
@@ -30,17 +28,13 @@ const Chat = () => {
     }
   };
 
-  // Set up polling to fetch messages periodically
   useEffect(() => {
     const interval = setInterval(() => {
       fetchMessages();
     }, pollingInterval);
-
-    // Clean up the interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
-  // Send a new message to the new collection
   const handleSendMessage = async (e) => {
     if (input.trim()) {
       e.preventDefault();
@@ -59,16 +53,14 @@ const Chat = () => {
           ]
         );
 
-        // After sending, re-fetch messages to update the UI
         fetchMessages();
-        setInput('');  // Reset input field
+        setInput('');
       } catch (error) {
         console.error('Error sending message:', error);
       }
     }
   };
 
-  // Clear chat history
   const handleClearChat = () => {
     setMessages([]);
     localStorage.removeItem('chatMessages');
@@ -99,8 +91,17 @@ const Chat = () => {
           onChange={(e) => setInput(e.target.value)}
           spellCheck="false"
           autoComplete="off"
-          placeholder="Type your message and press Enter..."
+          placeholder="Type your message..."
         />
+        <div className="send-button-container">
+          <button
+            type="button"
+            className="send-button"
+            onClick={handleSendMessage}
+          >
+            Send
+          </button>
+        </div>
       </form>
 
       <button className="clear-button" onClick={handleClearChat}>Clear Chat</button>
