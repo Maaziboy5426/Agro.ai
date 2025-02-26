@@ -49,6 +49,8 @@ const Home = () => {
         <br />
         <br />
         <br />
+        <br />
+        <br />
         <h2>Gallery</h2>
         <div className="gallery-images">
 
