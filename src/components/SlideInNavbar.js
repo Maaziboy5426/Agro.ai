@@ -37,7 +37,7 @@ const SlideInNavbar = () => {
             <Link to="/home" onClick={toggleNavbar}>Home</Link>
           </li>
           <li>
-          <Link to="/profile" onClick={toggleNavbar}>Profil</Link>
+          <Link to="/profile" onClick={toggleNavbar}>Profile</Link>
           </li> 
           <li>
           <Link to="/control" onClick={toggleNavbar}>Controls</Link>
