@@ -1,52 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import './Chat.css';
 import SlideInNavbar from './SlideInNavbar';
-import { databases } from '../appwriteConfig';
-import { Permission, Role, ID } from 'appwrite';
+import { Client, Databases, ID, Permission, Role } from 'appwrite';
+
+const client = new Client()
+  .setEndpoint('https://cloud.appwrite.io/v1')  // Your Appwrite endpoint
+  .setProject('67bea2dc001e1c340258');  // Your Appwrite project ID
+
+const databases = new Databases(client);
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-
   const username = localStorage.getItem('userName') || 'Anonymous';
 
-  // Fetch messages from Appwrite when the component mounts
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await databases.listDocuments(
-          '67bea376001fcea919ba',  // Your database ID
-          '67bea385003143b327ec'   // Your collection ID
-        );
-        setMessages(response.documents);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    };
+  // Polling interval in milliseconds (e.g., 5 seconds)
+  const pollingInterval = 5000;
 
-    fetchMessages();
+  // Fetch messages from the new database and collection
+  const fetchMessages = async () => {
+    try {
+      const response = await databases.listDocuments(
+        '67bea376001fcea919ba',  // Database ID
+        '67beb6ba00244e799fa2'   // New Collection ID
+      );
+      setMessages(response.documents);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  // Set up polling to fetch messages periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, pollingInterval);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
-  // Listen for real-time updates on the messages
-  useEffect(() => {
-    const subscribeToMessages = () => {
-      const realtime = new Realtime();  // Ensure you've initialized Realtime correctly
-      realtime.subscribe('collections.67bea385003143b327ec.documents', (data) => {
-        if (data && data.events.includes('databases.documents.create')) {
-          setMessages((prevMessages) => [...prevMessages, data.payload]);
-        }
-      });
-    };
-
-    subscribeToMessages();
-
-    return () => {
-      // Cleanup the subscription when the component unmounts
-      realtime.unsubscribe();
-    };
-  }, []);
-
+  // Send a new message to the new collection
   const handleSendMessage = async (e) => {
     if (input.trim()) {
       e.preventDefault();
@@ -55,8 +49,8 @@ const Chat = () => {
         const timestamp = new Date().toISOString();
 
         await databases.createDocument(
-          '67bea376001fcea919ba', 
-          '67bea385003143b327ec', 
+          '67bea376001fcea919ba',  // Database ID
+          '67beb6ba00244e799fa2',  // New Collection ID
           ID.unique(),
           { text: input, sender: username, timestamp },
           [
@@ -65,14 +59,16 @@ const Chat = () => {
           ]
         );
 
-        setMessages([...messages, { text: input, sender: username, timestamp }]);
-        setInput('');
+        // After sending, re-fetch messages to update the UI
+        fetchMessages();
+        setInput('');  // Reset input field
       } catch (error) {
         console.error('Error sending message:', error);
       }
     }
   };
 
+  // Clear chat history
   const handleClearChat = () => {
     setMessages([]);
     localStorage.removeItem('chatMessages');
@@ -83,7 +79,7 @@ const Chat = () => {
       <SlideInNavbar />
       <h2>Community Chat</h2>
       <p>Logged in as: <strong>{username}</strong></p>
-      
+
       <div className="chat-box">
         {messages.length > 0 ? (
           messages.map((msg, index) => (
@@ -96,14 +92,13 @@ const Chat = () => {
         )}
       </div>
 
-      <form className="chat-form">
+      <form className="chat-form" onSubmit={handleSendMessage}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           spellCheck="false"
           autoComplete="off"
-          onKeyDown={handleSendMessage}
           placeholder="Type your message and press Enter..."
         />
       </form>
