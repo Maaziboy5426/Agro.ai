@@ -1,24 +1,51 @@
-import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import './Chat.css'; // Import CSS for styling
+import { Link } from 'react-router-dom';
+import './Chat.css';
 import SlideInNavbar from './SlideInNavbar';
+import { databases } from '../appwriteConfig';
 import { Permission, Role, ID } from 'appwrite';
-import { databases } from '../appwriteConfig'; // Import your Appwrite configuration
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  
+
   const username = localStorage.getItem('userName') || 'Anonymous';
 
+  // Fetch messages from Appwrite when the component mounts
   useEffect(() => {
-    const savedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
-    setMessages(savedMessages);
+    const fetchMessages = async () => {
+      try {
+        const response = await databases.listDocuments(
+          '67bea376001fcea919ba',  // Your database ID
+          '67bea385003143b327ec'   // Your collection ID
+        );
+        setMessages(response.documents);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
   }, []);
 
+  // Listen for real-time updates on the messages
   useEffect(() => {
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
-  }, [messages]);
+    const subscribeToMessages = () => {
+      const realtime = new Realtime();  // Ensure you've initialized Realtime correctly
+      realtime.subscribe('collections.67bea385003143b327ec.documents', (data) => {
+        if (data && data.events.includes('databases.documents.create')) {
+          setMessages((prevMessages) => [...prevMessages, data.payload]);
+        }
+      });
+    };
+
+    subscribeToMessages();
+
+    return () => {
+      // Cleanup the subscription when the component unmounts
+      realtime.unsubscribe();
+    };
+  }, []);
 
   const handleSendMessage = async (e) => {
     if (input.trim()) {
@@ -70,24 +97,15 @@ const Chat = () => {
       </div>
 
       <form className="chat-form">
-        <div className="input-container">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            spellCheck="false"
-            autoComplete="off"
-            onKeyDown={handleSendMessage}
-            placeholder="Type your message and press Enter..."
-          />
-          <button
-            type="button"
-            className="send-button"
-            onClick={handleSendMessage}
-          >
-            Send
-          </button>
-        </div>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          spellCheck="false"
+          autoComplete="off"
+          onKeyDown={handleSendMessage}
+          placeholder="Type your message and press Enter..."
+        />
       </form>
 
       <button className="clear-button" onClick={handleClearChat}>Clear Chat</button>
