@@ -13,7 +13,7 @@ const Profile = () => {
       name: storedUserName,
       email: 'john.doe@example.com',
       bio: 'A passionate plant lover and gardening enthusiast.',
-      profilePicture: URL("pfp.jpg"),
+      profilePicture:"pfp.jpg",
     };
   });
 
