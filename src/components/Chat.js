@@ -3,6 +3,7 @@ import './Chat.css';
 import SlideInNavbar from './SlideInNavbar';
 import { Client, Databases, ID, Permission, Role } from 'appwrite';
 
+// Initialize Appwrite Client
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1')  // Your Appwrite endpoint
   .setProject('67bea2dc001e1c340258');  // Your Appwrite project ID
@@ -12,7 +13,9 @@ const databases = new Databases(client);
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const username = localStorage.getItem('userName') || 'Anonymous';
+
+  // Fetch the name from localStorage (set in login or sign-up page)
+  const username = JSON.parse(localStorage.getItem('user'))?.name || 'Anonymous';
 
   const pollingInterval = 5000;
 
@@ -20,7 +23,7 @@ const Chat = () => {
     try {
       const response = await databases.listDocuments(
         '67bea376001fcea919ba',  // Database ID
-        '67beb6ba00244e799fa2'   // New Collection ID
+        '67beb6ba00244e799fa2'   // Collection ID
       );
       setMessages(response.documents);
     } catch (error) {
@@ -44,7 +47,7 @@ const Chat = () => {
 
         await databases.createDocument(
           '67bea376001fcea919ba',  // Database ID
-          '67beb6ba00244e799fa2',  // New Collection ID
+          '67beb6ba00244e799fa2',  // Collection ID
           ID.unique(),
           { text: input, sender: username, timestamp },
           [
@@ -53,8 +56,8 @@ const Chat = () => {
           ]
         );
 
-        fetchMessages();
-        setInput('');
+        fetchMessages();  // Fetch messages after sending a new one
+        setInput('');  // Reset input field
       } catch (error) {
         console.error('Error sending message:', error);
       }

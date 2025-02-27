@@ -1,30 +1,23 @@
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect, useRef } from 'react';
-import './Profile.css'; 
-import SlideInNavbar from './SlideInNavbar';
+import { useState, useEffect, useRef } from "react";
+import "./Profile.css";
+import SlideInNavbar from "./SlideInNavbar";
 
 const Profile = () => {
-  const storedUserName = localStorage.getItem('userName') || 'John Doe';
+  // Load user profile data from localStorage, including name
+  const storedUser = JSON.parse(localStorage.getItem("user")) || {
+    name: "John Doe", // Default name if not set
+    email: "john.doe@example.com", // Default email if not set
+    bio: "A passionate plant lover and gardening enthusiast.", // Default bio if not set
+    profilePicture: "pfp.jpg", // Default profile picture if not uploaded
+  };
+
+  const [user, setUser] = useState(storedUser);
   const fileInputRef = useRef(null); // Ref to trigger file input
 
-  const [user, setUser] = useState(() => {
-    const savedUser = JSON.parse(localStorage.getItem(`userProfile_${storedUserName}`));
-    return savedUser || {
-      name: storedUserName,
-      email: 'john.doe@example.com',
-      bio: 'A passionate plant lover and gardening enthusiast.',
-      profilePicture:"pfp.jpg",
-    };
-  });
-
+  // Update localStorage whenever user data changes
   useEffect(() => {
-    localStorage.setItem(`userProfile_${storedUserName}`, JSON.stringify(user));
-  }, [user, storedUserName]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
-  };
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -49,7 +42,7 @@ const Profile = () => {
         <div className="profile-card">
           <img
             src={user.profilePicture}
-            alt="pfp.jpg"
+            alt="Profile"
             className="profile-picture clickable"
             onClick={handleImageClick}
             title="Click to change profile picture"
@@ -59,17 +52,27 @@ const Profile = () => {
             accept="image/*"
             ref={fileInputRef}
             onChange={handleFileChange}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
-          <h2>{user.name}</h2>
+          <h2>{user.name}</h2> {/* Display name from localStorage */}
           <div className="profile-info">
+            <div className="profile-field">
+  {/*             <strong>Name:</strong>
+              <input
+                type="text"
+                name="name"
+                value={user.name}
+                readOnly
+                className="profile-input"
+              /> */}
+            </div>
             <div className="profile-field">
               <strong>Email:</strong>
               <input
                 type="email"
                 name="email"
                 value={user.email}
-                onChange={handleChange}
+                readOnly
                 className="profile-input"
               />
             </div>
@@ -78,7 +81,7 @@ const Profile = () => {
               <textarea
                 name="bio"
                 value={user.bio}
-                onChange={handleChange}
+                onChange={(e) => setUser({ ...user, bio: e.target.value })}
                 className="profile-input"
                 autoComplete="off"
                 spellCheck="false"
