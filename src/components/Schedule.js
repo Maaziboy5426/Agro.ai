@@ -1,125 +1,213 @@
-import { Link, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
-import './Schedule.css';
-import SlideInNavbar from './SlideInNavbar';
+import React, { useState, useEffect } from "react";
+import { Client, Databases, ID } from "appwrite";
+import SlideInNavbar from "./SlideInNavbar";
 
-const ScheduleGenerator = () => {
-    const [scheduleType, setScheduleType] = useState(null); // Track the selected schedule type (manual/automatic)
-    const [startDate, setStartDate] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [duration, setDuration] = useState(0);
-    const [repeatEvery, setRepeatEvery] = useState("day");
-    const [endDate, setEndDate] = useState("");
-    const [timezone, setTimezone] = useState("");
-    const [schedule, setSchedule] = useState(null);
-    const navigate = useNavigate(); // For navigation to home
+// Constants
+const ESP32_IP = "http://YOUR_ESP32_IP"; // Replace with actual IP
 
-    // Function to generate schedule for manual input
-    const generateSchedule = () => {
-        const startDateTime = new Date(`${startDate}T${startTime}`);
-        const endDateTime = new Date(endDate);
+const Schedule = () => {
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleTime, setScheduleTime] = useState("");
+  const [duration, setDuration] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [automaticMode, setAutomaticMode] = useState(false);
+  const [moistureValue, setMoistureValue] = useState(0);
+  const [schedule, setSchedule] = useState("");
 
-        const scheduleObj = {
-            start: startDateTime.toLocaleString(),
-            duration: `${duration} minutes`,
-            repeatEvery: repeatEvery === "week" ? "Week on" : "Day on",
-            endRecurrence: endDateTime.toLocaleString(),
-            timezone: timezone,
-        };
+  // Initialize Appwrite client
+  const client = new Client();
+  client.setEndpoint("https://cloud.appwrite.io/v1").setProject("67bea2dc001e1c340258");
+  const databases = new Databases(client);
 
-        setSchedule(scheduleObj);
-    };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchMoisture();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-    // Function to send the schedule to ESP32
-    const sendToESP32 = () => {
-        if (schedule) {
-            console.log("Schedule sent to ESP32:", schedule);
-            alert("Schedule sent to ESP32!");
-        } else {
-            alert("Please generate a schedule first.");
+  const fetchMoisture = async () => {
+    try {
+      const response = await fetch(`${ESP32_IP}/moisture`);
+      const data = await response.text();
+      setMoistureValue(parseInt(data));
+    } catch (error) {
+      console.error("Error fetching moisture data:", error);
+    }
+  };
+
+  const toggleAutomaticMode = async () => {
+    try {
+      const response = await fetch(`${ESP32_IP}/toggle`);
+      const modeStatus = await response.text();
+      setAutomaticMode(modeStatus.includes("Automatic Mode"));
+    } catch (error) {
+      console.error("Error toggling mode:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await databases.createDocument(
+        "67bea376001fcea919ba",
+        "67c0b0e60027dd30d953",
+        ID.unique(),
+        {
+          schedule_date: scheduleDate,
+          schedule_time: scheduleTime,
+          duration: Number(duration),
         }
-    };
+      );
 
-    return (
-        <div style={{ maxWidth: "600px", margin: "20px auto", padding: "20px", backgroundColor: "rgba(255, 255, 255, 0.8)", borderRadius: "8px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)", paddingRight: "40px" }}>
-            <h2>Plant Watering Schedule Generator</h2>
-            <SlideInNavbar />
+      setMessage("Watering schedule set successfully!");
+      setScheduleDate("");
+      setScheduleTime("");
+      setDuration("");
+    } catch (error) {
+      console.error("Error setting schedule:", error);
+      setMessage(`Error setting schedule: ${error.message}`);
+    }
+    setLoading(false);
+  };
 
-            {/* Buttons to choose schedule type */}
-            {!scheduleType && (
-                <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-                    <button
-                        onClick={() => setScheduleType("manual")}
-                        style={{ padding: "10px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px" }}
-                    >
-                        Manual Scheduling
-                    </button>
-                    <button
-                        onClick={() => navigate("/home")} // Redirect to home for automatic scheduling
-                        style={{ padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "4px" }}
-                    >
-                        Automatic Scheduling
-                    </button>
-                </div>
-            )}
+  const sendSchedule = async () => {
+    try {
+      await fetch(`${ESP32_IP}/schedule`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          schedules: [
+            { startHour: 12, startMinute: 30, duration: 1 },
+            { startHour: 18, startMinute: 0, duration: 2 },
+          ],
+        }),
+      });
+      alert("Schedule Sent!");
+    } catch (error) {
+      console.error("Error sending schedule:", error);
+    }
+  };
 
-            {/* Display Manual Schedule form if Manual is selected */}
-            {scheduleType === "manual" && (
-                <div>
-                    <div>
-                        <label>Start Date: </label>
-                        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                    </div>
-
-                    <div>
-                        <label>Start Time: </label>
-                        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-                    </div>
-
-                    <div>
-                        <label>Duration (minutes): </label>
-                        <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
-                    </div>
-
-                    <div>
-                        <label>Repeat Every: </label>
-                        <select value={repeatEvery} onChange={(e) => setRepeatEvery(e.target.value)}>
-                            <option value="day">Day</option>
-                            <option value="week">Week</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>End Date: </label>
-                        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                    </div>
-
-                    <div>
-                        <label>Timezone: </label>
-                        <input type="text" placeholder="e.g., Asia/Kolkata" value={timezone} onChange={(e) => setTimezone(e.target.value)} />
-                    </div>
-
-                    <button onClick={generateSchedule} style={{ margin: "10px 5px", padding: "10px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "4px" }}>
-                        Generate Schedule
-                    </button>
-                    <button onClick={sendToESP32} style={{ margin: "10px 5px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "4px" }}>
-                        Send to ESP32
-                    </button>
-
-                    {schedule && (
-                        <div style={{ marginTop: "20px" }}>
-                            <h3>Generated Schedule</h3>
-                            <p><strong>Start:</strong> {schedule.start}</p>
-                            <p><strong>Duration:</strong> {schedule.duration}</p>
-                            <p><strong>Repeat Every:</strong> {schedule.repeatEvery}</p>
-                            <p><strong>End Recurrence:</strong> {schedule.endRecurrence}</p>
-                            <p><strong>Timezone:</strong> {schedule.timezone}</p>
-                        </div>
-                    )}
-                </div>
-            )}
+  return (
+    <div style={styles.container}>
+      <SlideInNavbar />
+      <h1 style={styles.header}>Schedule Watering</h1>
+      <p>Moisture Level: {moistureValue}</p>
+      <button onClick={toggleAutomaticMode} style={styles.toggleButton}>
+        {automaticMode ? "Disable Automatic Mode" : "Enable Automatic Mode"}
+      </button>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Date:</label>
+          <input
+            type="date"
+            value={scheduleDate}
+            onChange={(e) => setScheduleDate(e.target.value)}
+            style={styles.input}
+            required
+          />
         </div>
-    );
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Time:</label>
+          <input
+            type="time"
+            value={scheduleTime}
+            onChange={(e) => setScheduleTime(e.target.value)}
+            style={styles.input}
+            required
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Duration (minutes):</label>
+          <input
+            type="number"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            style={styles.input}
+            required
+            min="1"
+          />
+        </div>
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? "Scheduling..." : "Submit Schedule"}
+        </button>
+      </form>
+      <input
+        type="text"
+        style={styles.input}
+        placeholder="Enter schedule JSON"
+        value={schedule}
+        onChange={(e) => setSchedule(e.target.value)}
+      />
+      <button onClick={sendSchedule} style={styles.button}>Send Schedule</button>
+      {message && <p style={styles.message}>{message}</p>}
+    </div>
+  );
 };
 
-export default ScheduleGenerator;
+const styles = {
+  container: {
+    maxWidth: "500px",
+    margin: "2rem auto",
+    padding: "2rem",
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+    fontFamily: "Arial, sans-serif",
+    textAlign: "center",
+  },
+  header: {
+    color: "#333",
+  },
+  toggleButton: {
+    margin: "1rem 0",
+    padding: "0.75rem",
+    fontSize: "1rem",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  form: {
+    marginTop: "2rem",
+  },
+  formGroup: {
+    marginBottom: "1rem",
+    textAlign: "left",
+  },
+  label: {
+    display: "block",
+    fontSize: "1rem",
+    marginBottom: "0.5rem",
+  },
+  input: {
+    width: "100%",
+    padding: "0.75rem",
+    fontSize: "1rem",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  button: {
+    padding: "0.75rem",
+    fontSize: "1rem",
+    backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  message: {
+    marginTop: "1rem",
+    color: "#28a745",
+  },
+};
+
+export default Schedule;

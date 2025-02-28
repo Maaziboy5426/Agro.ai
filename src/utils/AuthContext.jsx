@@ -16,14 +16,19 @@ export const AuthProvider = ({ children }) => {
 
     // **LOGIN FUNCTION**
     const loginUser = (email, password) => {
-        // Normally you would check the credentials here, for now it's local storage
-        if (email && password) {
-            const user = { email, password };
-            localStorage.setItem("user", JSON.stringify(user));
-            setUser(user);
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.email === email && storedUser.password === password) {
+            setUser(storedUser);
             return true;
         }
         return false;
+    };
+
+    // **SIGNUP FUNCTION (optional, for better auth flow)**
+    const registerUser = (name, email, password) => {
+        const newUser = { name, email, password };
+        localStorage.setItem("user", JSON.stringify(newUser));
+        setUser(newUser);
     };
 
     // **LOGOUT FUNCTION**
@@ -33,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loginUser, logoutUser }}>
+        <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser }}>
             {children}
         </AuthContext.Provider>
     );

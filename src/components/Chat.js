@@ -107,7 +107,7 @@ const Chat = () => {
         </div>
       </form>
 
-      <button className="clear-button" onClick={handleClearChat}>Clear Chat</button>
+
     </div>
   );
 };

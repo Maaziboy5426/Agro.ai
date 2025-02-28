@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/AuthContext"; // Make sure AuthContext exists
+import { useAuth } from "../utils/AuthContext"; // Using AuthContext
 import "./Signup.css";
 
 const SignUp = () => {
-    const { registerUser } = useAuth();
+    const { registerUser } = useAuth(); // Use registerUser from AuthContext
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,8 +19,7 @@ const SignUp = () => {
             return;
         }
 
-        const user = { name, email, password };
-        localStorage.setItem("user", JSON.stringify(user)); // Store user in localStorage
+        registerUser(name, email, password); // Save user info via AuthContext
         navigate("/home"); // Redirect to home after successful signup
     };
 
