@@ -1,93 +1,69 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { account } from "./appwriteConfig";
-import { useNavigate } from "react-router-dom";
-import { ID } from "appwrite";
-
+import { createContext, useContext, useState, useEffect } from "react";
+import { account, ID } from "./appwriteConfig"; 
+// Create Auth Context
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
+    // **Check if user is logged in on app load**
     useEffect(() => {
-        checkUserStatus();
+        const checkUser = async () => {
+            try {
+                const response = await account.get(); // Get user session
+                setUser(response);
+            } catch {
+                setUser(null);
+            }
+        };
+        checkUser();
     }, []);
 
-    const loginUser = async (userInfo) => {
-        setLoading(true);
-        console.log("userInfo", userInfo);
-    
+    // **REGISTER USER**
+    const registerUser = async (name, email, password) => {
         try {
-            // Login the user and create a session
-            let response = await account.createSession(userInfo.email, userInfo.password);
+            const response = await account.create(ID.unique(), email, password, name);
+            setUser(response);
+            return response;
+        } catch (error) {
+            console.error("Registration Error:", error.message);
+            throw new Error(error.message);
+        }
+    };
+
+    // **LOGIN USER**
+ // ✅ Ensure this import is correct
+
+    const loginUser = async (email, password) => {
+        try {
+            await account.createEmailSession(email, password);
             
-            // Fetch the account details
-            let accountDetails = await account.get();
-            
-            // Set the user state
-            setUser(accountDetails);
-            
-            // Navigate to home page
-            navigate("/home"); 
+            // Fetch user details after login
+            const response = await account.get();
+            setUser(response);
+            return response;
         } catch (error) {
             console.error("Login Error:", error.message);
+            throw new Error("Invalid email or password");
         }
-        setLoading(false);
     };
     
-
+    // **LOGOUT USER**
     const logoutUser = async () => {
         try {
-            await account.deleteSession("current");
+            await account.deleteSession("current"); // Delete current session
             setUser(null);
-            navigate("/"); // Redirect to login after logout
         } catch (error) {
             console.error("Logout Error:", error.message);
         }
     };
 
-    const registerUser = async (userInfo) => {
-        setLoading(true);
-        try {
-            let response = await account.create(ID.unique(), userInfo.email, userInfo.password1, userInfo.name);
-
-            // 🔥 FIX: Use `createSession` after registration
-            await account.createSession(userInfo.email, userInfo.password1);
-            let accountDetails = await account.get();
-            setUser(accountDetails);
-            navigate("/");
-        } catch (error) {
-            console.error("Register Error:", error.message);
-        }
-        setLoading(false);
-    };
-
-    const checkUserStatus = async () => {
-        try {
-            let accountDetails = await account.get();
-            setUser(accountDetails);
-        } catch (error) {
-            console.error("Check Status Error:", error.message);
-        }
-        setLoading(false);
-    };
-
-    const contextData = {
-        user,
-        loginUser,
-        logoutUser,
-        registerUser,
-    };
-
     return (
-        <AuthContext.Provider value={contextData}>
-            {loading ? <p>Loading...</p> : children}
+        <AuthContext.Provider value={{ user, loginUser, logoutUser, registerUser }}>
+            {children}
         </AuthContext.Provider>
     );
 };
 
-// Custom Hook
+// Custom Hook for Using AuthContext
 export const useAuth = () => useContext(AuthContext);
-
-export default AuthContext;
