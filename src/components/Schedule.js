@@ -3,7 +3,8 @@ import { Client, Databases, ID } from "appwrite";
 import SlideInNavbar from "./SlideInNavbar";
 
 // Constants
-const ESP32_IP = "http://YOUR_ESP32_IP"; // Replace with actual IP
+const ESP32_IP = "http://esp32.local"; // No need for hardcoded IP anymore
+
 
 const Schedule = () => {
   const [scheduleDate, setScheduleDate] = useState("");
@@ -139,15 +140,6 @@ const Schedule = () => {
           {loading ? "Scheduling..." : "Submit Schedule"}
         </button>
       </form>
-      <input
-        type="text"
-        style={styles.input}
-        placeholder="Enter schedule JSON"
-        value={schedule}
-        onChange={(e) => setSchedule(e.target.value)}
-      />
-      <button onClick={sendSchedule} style={styles.button}>Send Schedule</button>
-      {message && <p style={styles.message}>{message}</p>}
     </div>
   );
 };

@@ -12,15 +12,21 @@ const SignUp = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             return;
         }
 
-        registerUser(name, email, password); // Save user info via AuthContext
-        navigate("/home"); // Redirect to home after successful signup
+        try {
+            await registerUser(name, email, password); // Register user in Appwrite
+            navigate("/home"); // Redirect to home after successful signup
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (

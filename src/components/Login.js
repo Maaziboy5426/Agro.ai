@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
 import "./Login.css";
 
 const Login = () => {
-    const { loginUser } = useAuth();
+    const { loginUser, isAuthenticated } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setError(null); // Clear previous errors
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/home");
+        }
+    }, [isAuthenticated, navigate]);
 
-        if (loginUser(email, password)) {
-            navigate("/home"); // Redirect to home after successful login
-        } else {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        try {
+            await loginUser(email, password);
+            // Navigation will occur in the useEffect above
+        } catch (err) {
             setError("Invalid email or password. Please try again.");
         }
     };
