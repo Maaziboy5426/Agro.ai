@@ -22,8 +22,14 @@ const SignUp = () => {
         }
 
         try {
-            await registerUser(name, email, password); // Register user in Appwrite
-            navigate("/home"); // Redirect to home after successful signup
+            // Register user in Appwrite
+            await registerUser(name, email, password);
+
+            // Store the user data locally after successful registration
+            localStorage.setItem("user", JSON.stringify({ name, email }));
+
+            // Redirect to home after successful signup
+            navigate("/home");
         } catch (err) {
             setError(err.message);
         }

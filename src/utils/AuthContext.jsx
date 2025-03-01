@@ -1,61 +1,40 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { account, ID } from "./appwriteConfig"; 
+
 // Create Auth Context
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    // **Check if user is logged in on app load**
+    // Get user from local storage when app loads
     useEffect(() => {
-        const checkUser = async () => {
-            try {
-                const response = await account.get(); // Get user session
-                setUser(response);
-            } catch {
-                setUser(null);
-            }
-        };
-        checkUser();
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
     }, []);
 
-    // **REGISTER USER**
-    const registerUser = async (name, email, password) => {
-        try {
-            const response = await account.create(ID.unique(), email, password, name);
-            setUser(response);
-            return response;
-        } catch (error) {
-            console.error("Registration Error:", error.message);
-            throw new Error(error.message);
+    // **LOGIN FUNCTION**
+    const loginUser = (email, password) => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser && storedUser.email === email && storedUser.password === password) {
+            setUser(storedUser);
+            return true;
         }
+        return false;
     };
 
-    // **LOGIN USER**
- // ✅ Ensure this import is correct
-
-    const loginUser = async (email, password) => {
-        try {
-            await account.createEmailSession(email, password);
-            
-            // Fetch user details after login
-            const response = await account.get();
-            setUser(response);
-            return response;
-        } catch (error) {
-            console.error("Login Error:", error.message);
-            throw new Error("Invalid email or password");
-        }
+    // **SIGNUP FUNCTION (optional, for better auth flow)**
+    const registerUser = (name, email, password) => {
+        const newUser = { name, email, password };
+        localStorage.setItem("user", JSON.stringify(newUser));
+        setUser(newUser);
     };
-    
-    // **LOGOUT USER**
-    const logoutUser = async () => {
-        try {
-            await account.deleteSession("current"); // Delete current session
-            setUser(null);
-        } catch (error) {
-            console.error("Logout Error:", error.message);
-        }
+
+    // **LOGOUT FUNCTION**
+    const logoutUser = () => {
+        localStorage.removeItem("user");
+        setUser(null);
     };
 
     return (

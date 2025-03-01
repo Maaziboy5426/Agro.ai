@@ -1,85 +1,42 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import './Chatbot.css';
-import SlideInNavbar from "./SlideInNavbar";
+// File: pages/api/chatbot.js
 
-const Chatbot = () => {
-  const [messages, setMessages] = useState([{ text: "Hello! I'm your chatbot. How can I assist you today?", sender: "bot" }]);
-  const [input, setInput] = useState("");
+import fetch from 'node-fetch';
 
-  const greetings = ["hello", "hi", "hey", "howdy"];
-  const cropQuestions = [
-    "what crops are best for this season",
-    "how do i improve soil fertility",
-    "any tips for pest control"
-  ];
-  const weatherQuestions = [
-    "what's the weather forecast",
-    "will it rain today",
-    "is there a frost warning"
-  ];
-  const goodbyes = ["bye", "goodbye", "see you later", "take care"];
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-  const getResponse = (userInput) => {
-    const lowerInput = userInput.toLowerCase();
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: 'No message provided' });
+  }
 
-    if (greetings.some((greet) => lowerInput.includes(greet))) {
-      return greetings[Math.floor(Math.random() * greetings.length)].charAt(0).toUpperCase() + greetings[Math.floor(Math.random() * greetings.length)].slice(1);
+  try {
+    // Call the OpenAI Chat Completion API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
+        temperature: 0.7
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      return res.status(500).json({ error: data.error });
     }
 
-    if (cropQuestions.some((question) => lowerInput.includes(question))) {
-      return "For this season, consider planting crops like maize, beans, and tomatoes. Remember to rotate crops to maintain soil health.";
-    }
-
-    if (weatherQuestions.some((question) => lowerInput.includes(question))) {
-      return "You can check the weather forecast on your local weather website or app. It's crucial to stay updated for optimal conditions.";
-    }
-
-    if (goodbyes.some((bye) => lowerInput.includes(bye))) {
-      return "Goodbye! See you next time.";
-    }
-
-    return "I'm sorry, I don't have information on that right now. Could you ask something else?";
-  };
-
-  const handleSendMessage = () => {
-    if (!input.trim()) return;
-    const userMessage = { text: input, sender: "user" };
-    const botResponse = { text: getResponse(input), sender: "bot" };
-    setMessages([...messages, userMessage, botResponse]);
-    setInput("");
-  };
-
-  return (
-    <div>
-      <SlideInNavbar /> {/* Move SlideInNavbar outside of chat-container */}
-      <div className="chat-container">
-        <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
-          <h2>Chatbot</h2>
-          <div style={{ height: "300px", overflowY: "auto", marginBottom: "10px", padding: "10px", border: "1px solid #ddd", borderRadius: "5px" }}>
-            {messages.map((msg, index) => (
-              <div key={index} style={{ textAlign: msg.sender === "user" ? "right" : "left", margin: "5px 0" }}>
-                <span style={{ display: "inline-block", padding: "8px", borderRadius: "5px", background: msg.sender === "user" ? "#0084ff" : "#e0e0e0", color: msg.sender === "user" ? "white" : "black" }}>
-                  {msg.text}
-                </span>
-              </div>
-            ))}
-          </div>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-            placeholder="Type your message..."
-            style={{ width: "75%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          <button onClick={handleSendMessage} style={{ padding: "10px", marginLeft: "5px", borderRadius: "5px", border: "none", background: "#0084ff", color: "white" }}>
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Chatbot;
+    // Return ChatGPT's response
+    const chatResponse = data.choices[0].message.content;
+    res.status(200).json({ response: chatResponse });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch response from ChatGPT' });
+  }
+}

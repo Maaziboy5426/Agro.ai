@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/AuthContext";
+import { useAuth } from "../utils/AuthContext";  // Ensure this is importing the correct context
 import "./Login.css";
 
 const Login = () => {
@@ -10,13 +10,28 @@ const Login = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    // Use effect to check if the data exists in localStorage and pre-fill the form
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("email");
+        const savedPassword = localStorage.getItem("password");
+
+        if (savedEmail) setEmail(savedEmail);
+        if (savedPassword) setPassword(savedPassword);
+    }, []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null); // Clear previous errors
 
-        if (loginUser(email, password)) {
+        try {
+            // Call loginUser with email and password only
+            await loginUser(email, password);
             navigate("/home"); // Redirect to home after successful login
-        } else {
+
+            // Store email and password in localStorage for future logins
+            localStorage.setItem("email", email);
+            localStorage.setItem("password", password);
+        } catch (error) {
             setError("Invalid email or password. Please try again.");
         }
     };

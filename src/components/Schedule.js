@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Client, Databases, ID } from "appwrite";
 import SlideInNavbar from "./SlideInNavbar";
 
-// Constants
-const ESP32_IP = "http://esp32.local"; // No need for hardcoded IP anymore
-
+const ESP32_IP = "http://esp32.local"; // Use mDNS for dynamic IP resolution
 
 const Schedule = () => {
   const [scheduleDate, setScheduleDate] = useState("");
@@ -14,13 +12,13 @@ const Schedule = () => {
   const [message, setMessage] = useState("");
   const [automaticMode, setAutomaticMode] = useState(false);
   const [moistureValue, setMoistureValue] = useState(0);
-  const [schedule, setSchedule] = useState("");
 
-  // Initialize Appwrite client
+  // Appwrite Client
   const client = new Client();
   client.setEndpoint("https://cloud.appwrite.io/v1").setProject("67bea2dc001e1c340258");
   const databases = new Databases(client);
 
+  // Fetch Moisture Data
   useEffect(() => {
     const interval = setInterval(() => {
       fetchMoisture();
@@ -38,6 +36,7 @@ const Schedule = () => {
     }
   };
 
+  // Toggle Automatic Mode
   const toggleAutomaticMode = async () => {
     try {
       const response = await fetch(`${ESP32_IP}/toggle`);
@@ -48,13 +47,18 @@ const Schedule = () => {
     }
   };
 
+  // Convert Date & Time to ESP32 Format and Send Schedule
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
     try {
-      const response = await databases.createDocument(
+      // Extract hour & minute from input
+      const [hour, minute] = scheduleTime.split(":").map(Number);
+
+      // Store in Appwrite
+      await databases.createDocument(
         "67bea376001fcea919ba",
         "67c0b0e60027dd30d953",
         ID.unique(),
@@ -64,6 +68,9 @@ const Schedule = () => {
           duration: Number(duration),
         }
       );
+
+      // Send to ESP32
+      await sendSchedule(hour, minute, Number(duration));
 
       setMessage("Watering schedule set successfully!");
       setScheduleDate("");
@@ -76,23 +83,29 @@ const Schedule = () => {
     setLoading(false);
   };
 
-  const sendSchedule = async () => {
+  // Send Schedule to ESP32
+  const sendSchedule = async (hour, minute, duration) => {
     try {
       await fetch(`${ESP32_IP}/schedule`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          schedules: [
-            { startHour: 12, startMinute: 30, duration: 1 },
-            { startHour: 18, startMinute: 0, duration: 2 },
-          ],
+          schedules: [{ startHour: hour, startMinute: minute, duration }],
         }),
       });
-      alert("Schedule Sent!");
+      alert("Schedule Sent to ESP32!");
     } catch (error) {
       console.error("Error sending schedule:", error);
+    }
+  };
+
+  // Manually Control Water Flow
+  const controlWaterFlow = async (state) => {
+    try {
+      await fetch(`${ESP32_IP}/relay?state=${state}`);
+      alert(`Water Pump ${state === "on" ? "Activated" : "Stopped"}!`);
+    } catch (error) {
+      console.error("Error controlling relay:", error);
     }
   };
 
@@ -104,6 +117,7 @@ const Schedule = () => {
       <button onClick={toggleAutomaticMode} style={styles.toggleButton}>
         {automaticMode ? "Disable Automatic Mode" : "Enable Automatic Mode"}
       </button>
+
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
           <label style={styles.label}>Date:</label>
@@ -140,6 +154,16 @@ const Schedule = () => {
           {loading ? "Scheduling..." : "Submit Schedule"}
         </button>
       </form>
+
+      {/* Manual Water Control Buttons */}
+      <button onClick={() => controlWaterFlow("on")} style={styles.manualButton}>
+        Turn Water ON
+      </button>
+      <button onClick={() => controlWaterFlow("off")} style={styles.manualButton}>
+        Turn Water OFF
+      </button>
+
+      {message && <p style={styles.message}>{message}</p>}
     </div>
   );
 };
@@ -155,9 +179,7 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     textAlign: "center",
   },
-  header: {
-    color: "#333",
-  },
+  header: { color: "#333" },
   toggleButton: {
     margin: "1rem 0",
     padding: "0.75rem",
@@ -168,18 +190,9 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
   },
-  form: {
-    marginTop: "2rem",
-  },
-  formGroup: {
-    marginBottom: "1rem",
-    textAlign: "left",
-  },
-  label: {
-    display: "block",
-    fontSize: "1rem",
-    marginBottom: "0.5rem",
-  },
+  form: { marginTop: "2rem" },
+  formGroup: { marginBottom: "1rem", textAlign: "left" },
+  label: { display: "block", fontSize: "1rem", marginBottom: "0.5rem" },
   input: {
     width: "100%",
     padding: "0.75rem",
@@ -196,10 +209,17 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
   },
-  message: {
+  manualButton: {
     marginTop: "1rem",
-    color: "#28a745",
+    padding: "0.75rem",
+    fontSize: "1rem",
+    backgroundColor: "#ff6347",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
+  message: { marginTop: "1rem", color: "#28a745" },
 };
 
 export default Schedule;
