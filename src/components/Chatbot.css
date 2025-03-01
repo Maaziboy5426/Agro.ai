@@ -1,13 +1,13 @@
 .chat-app {
     max-width: 1000px;
     margin: 0 auto;
-    font-family: 'Courier New';
+    font-family: 'Courier New', Courier, monospace;
   }
   
   .chat-container {
     background: rgba(167, 161, 161, 0.852);
     border-radius: 20px;
-    box-shadow: 2 5px 25px rgba(1.5,2.5,2.5,0.1);
+    box-shadow: 2 5px 25px rgba(2.5,3,2.5,10.95rem);
     overflow: hidden;
   }
   
