@@ -10,7 +10,7 @@ const Profile = () => {
     name: user?.name || "John Doe",
     email: user?.email || "john.doe@example.com",
     bio: "A passionate plant lover and gardening enthusiast.",
-    profilePicture: "pfp.jpg",
+    profilePicture: "https://tse4.mm.bing.net/th?id=OIP.Yaficbwe3N2MjD2Sg0J9OgHaHa&pid=Api&P=0&h=220",
   });
 
   useEffect(() => {
