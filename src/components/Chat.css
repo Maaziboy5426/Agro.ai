@@ -1,21 +1,26 @@
 /* Base Styles */
 * {
-  margin: 0;
-  padding: 0;
+  margin: 8;
+  padding:0
+  ;
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Courier New', Courier, monospace;
-  background: #f5f5f5;
-  color: #333;
+  background-image: url('S1.jpg'); /* Path from public/ */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  margin: 1;
+  padding: 5;
+  font-family: Arial, sans-serif;
 }
-
 /* Chat App Container */
 .chat-app {
   max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
+  margin:  auto;
+  padding: auto;
 }
 
 /* Chat Container */
@@ -25,7 +30,7 @@ body {
   padding: 30px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 20px;
-  box-shadow: 2px 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 5px 25px rgba(0, 1, 2, 0.3);
   overflow: hidden;
   position: relative;
 }
@@ -49,7 +54,7 @@ body {
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background: white;
+  background: rgba(255, 255, 255, 0.878);
   animation: fadeIn 0.3s ease;
 }
 
@@ -72,11 +77,13 @@ body {
 .message {
   margin: 10px 0;
   padding: 12px;
-  border-radius: 15px;
-  max-width: 80%;
+  border-radius: 18px;
+  max-width: 102%;
   line-height: 1.6;
   word-wrap: break-word;
   animation: fadeIn 0.3s ease;
+  box-shadow: 2.4px 2px 5px rgba(0, 0, 0, 0.3);
+  
 }
 
 .message.sent {

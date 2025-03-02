@@ -73,9 +73,9 @@ const Chat = () => {
     <div className="chat-container">
       <SlideInNavbar /> 
       
-<br/><br/>
-<h1 style={{ color: 'white' }}>Community Chat</h1>
-<h3 style={{ color: 'white' }}>Logged in as:</h3>
+      <br/><br/>
+      <h1 style={{ color: 'black' }}>Community Chat</h1>
+      <h3 style={{ color: 'black' }}>Logged in as: {username}</h3>
 
       <div className="chat-box">
         {messages.length > 0 ? (

@@ -5,7 +5,7 @@
     padding: 30px; /* Even padding on all sides */
     background-color:rgba(25, 255, 255, 0.8); /* White background */
     border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    box-shadow: 0 4px 20px rgba(2, 2, 1, 1.2); /* Add a subtle shadow */
     position: relative;
     padding-right: 40px;
     z-index: 10; /* Ensure it appears above the background */
