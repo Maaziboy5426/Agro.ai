@@ -71,9 +71,11 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <SlideInNavbar />
-      <h2>Community Chat</h2>
-      <p>Logged in as: <strong>{username}</strong></p>
+      <SlideInNavbar /> 
+      
+<br/><br/>
+<h1 style={{ color: 'white' }}>Community Chat</h1>
+<h3 style={{ color: 'white' }}>Logged in as:</h3>
 
       <div className="chat-box">
         {messages.length > 0 ? (
