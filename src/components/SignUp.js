@@ -78,9 +78,10 @@ const SignUp = () => {
                 <button type="submit" className="sign-up-button">Sign Up</button>
                 {error && <p className="error-message">{error}</p>}
             </form>
-            <p>Already have an account? <Link to="/">Login</Link></p>
+            <p>Already have an account? <Link to="/login">Login</Link></p>
         </div>
     );
 };
 
 export default SignUp;
+    
