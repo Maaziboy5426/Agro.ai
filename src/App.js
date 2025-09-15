@@ -25,7 +25,7 @@ function App() {
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/home" element={<PrivateRoute element={<><SlideInNavbar /><Home /></>} />} />
                     <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
