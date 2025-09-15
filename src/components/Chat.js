@@ -64,11 +64,6 @@ const Chat = () => {
     }
   };
 
-  const handleClearChat = () => {
-    setMessages([]);
-    localStorage.removeItem('chatMessages');
-  };
-
   return (
     <div className="chat-container">
       <SlideInNavbar /> 

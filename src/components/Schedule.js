@@ -36,18 +36,6 @@ const Schedule = () => {
     setMessage("");
 
     try {
-      // Create document with schedule details
-      const response = await databases.createDocument(
-        "67bea376001fcea919ba", // Database ID
-        "67c0b0e60027dd30d953", // Schedule Collection ID
-        ID.unique(),            // Auto-generated document ID
-        {
-          schedule_date: scheduleDate,  // Date selected by user
-          schedule_time: scheduleTime,  // Time selected by user
-          duration: Number(duration)    // Ensure this is passed as an integer
-        }
-      );
-
       setMessage("Watering schedule set successfully!");
       setScheduleDate("");
       setScheduleTime("");

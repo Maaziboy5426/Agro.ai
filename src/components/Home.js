@@ -31,10 +31,6 @@ const Home = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % galleryItems.length);
   };
 
-  const prevImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + galleryItems.length) % galleryItems.length);
-  };
-
   useEffect(() => {
     const interval = setInterval(nextImage, 3000); // Change image every 3 seconds
     return () => clearInterval(interval);
