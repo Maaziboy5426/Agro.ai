@@ -17,7 +17,7 @@ import Schedule from './components/Schedule';
 // Protected Route Wrapper
 const PrivateRoute = ({ element }) => {
     const { user } = useAuth();  // Using useAuth to get the user
-    return user ? element : <Navigate to="/" />;  // Redirect to Login if no user
+    return user ? element : <Navigate to="/login" />;  // Redirect to Login if no user
 };
 
 function App() {

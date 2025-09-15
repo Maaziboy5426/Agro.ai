@@ -6,6 +6,9 @@
     "@capacitor/cli": "^7.0.1",
     "@capacitor/core": "^7.0.1",
     "appwrite": "^17.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.11.0",
     "react": "^18.0.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.0.0",
@@ -15,12 +18,11 @@
     "react-scripts": "^5.0.0",
     "react-slick": "^0.30.3",
     "react-switch": "^7.1.0",
-    "slick-carousel": "^1.8.1",
-    "homepage": "."
+    "slick-carousel": "^1.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "android": "npx react-native run-android"
