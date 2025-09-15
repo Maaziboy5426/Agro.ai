@@ -92,7 +92,7 @@ const Home = () => {
       </section>
 
       <footer className="home-footer">
-        <p>&copy; 2023 Gardening App. All rights reserved.</p>
+        <p>&copy; 2025 Gardening App. All rights reserved.</p>
       </footer>
     </div>
   );

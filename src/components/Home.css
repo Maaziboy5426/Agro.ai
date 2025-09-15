@@ -37,35 +37,44 @@ h2 {
   margin-bottom: 30px;
 }
 
-.gallery-images {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-.gallery-images img {
-  width: 100%;
-  max-width: 700px;
-  height: 400px;
-  object-fit: cover;
+.gallery-image {
+  width: 100%;         /* Take full width of container */
+  max-width: 650px;    /* Don’t exceed 650px */
+  height: 300px;       /* Fixed height for consistency */
+  object-fit: cover;   /* Crop and center images */
   border-radius: 10px;
-  box-shadow: 0  3px 10px rgba(1.5, 1, 1.1, 0.6);
-  border: 3px solid black;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: block;
+  margin: 0 auto;      /* Center the image */
+  border : 2px;
+  border: 2px solid black
 }
+
+
 .image-caption {
   margin-top: 10px;
   font-size: 1rem;
   color: #2c3e50;
   font-style: italic;
   text-align: center;
-  padding: 8px 12px; /* Adds space inside the border */
-  border: 2px solid black; /* Black border around the caption */
-  border-radius: 6px; /* Optional: Rounded corners */
-  background-color: rgba(255, 255, 255, 0.8); /* Optional: Background for better readability */
-  display: inline-block; /* Keeps the border tight around the text */
-  box-shadow: 0  3px 10px rgba(1.2, 1, 1, 0.4);
+
+  /* Make width match the image */
+  width: 100%;
+  max-width: 650px;         /* Same as image max-width */
+  min-height: 60px;         /* Ensures uniform height even if text is short */
+
+  padding: 12px;
+  border: 2px solid black;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.85);
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+
+  display: block;           /* Full width block under image */
+  margin-left: auto;
+  margin-right: auto;       /* Center align with image */
 }
+
 
 
 
